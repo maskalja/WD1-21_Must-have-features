@@ -82,5 +82,73 @@ def result():
     return render_template("result.html", message=message)
 
 
+@app.route("/profile", methods=["GET"])
+def profile():
+    session_token = request.cookies.get('session_token')
+
+    user = db.query(User).filter_by(session_token=session_token).first()
+
+    if user:
+        return render_template('profile.html', user=user)
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/profile/edit', methods=["GET", "POST"])
+def profile_edit():
+    session_token = request.cookies.get('session_token')
+
+    user = db.query(User).filter_by(session_token=session_token).first()
+
+    if request.method == 'GET':
+        if user:
+            return render_template('profile_edit.html', user=user)
+        else:
+            return redirect(url_for('index'))
+    elif request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        user.name = name
+        user.email = email
+        user.password = hashlib.sha256(password.encode()).hexdigest()
+
+        db.session.add(user)
+        db.session.commit()
+
+        return redirect(url_for('profile'))
+
+@app.route('/profile/delete', methods=['GET', 'POST'])
+def profile_delete():
+    session_token = request.cookies.get('session_token')
+
+    user = db.query(User).filter_by(session_token=session_token).first()
+
+    if request.method == 'GET':
+        if user:
+            return render_template('profile_delete.html', user=user)
+        else:
+            return redirect(url_for('index'))
+
+    elif request.method == 'POST' and request.form.get("yes_delete"):
+        db.delete(user)
+        db.commit()
+        return redirect(url_for('index'))
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/users', methods=['GET'])
+def all_users():
+    users = db.query(User).all()
+
+    return render_template('users.html', users=users)
+
+@app.route('/users/<user_id>', methods=['GET'])
+def user_details(user_id):
+    user = db.query(User).get(int(user_id))
+
+    return render_template('users_details.html', user=user)
+
+
 if __name__ == '__main__':
     app.run(use_reloader=True, debug=True)  # if you use the port parameter, delete it before deploying to Heroku

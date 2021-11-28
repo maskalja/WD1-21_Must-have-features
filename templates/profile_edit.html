@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Profile Edit</h2>
+
+<form method="post">
+    <p>
+        <strong>Your name:</strong>
+        <input type="text" name="name" value=" {{ user.name }}">
+    </p>
+        <strong>Your email:</strong>
+        <input type="e-mail" name="email" value="{{ user.email }}">
+    </p>
+        <strong>Your password:</strong>
+        <input type="password" name="password" value="Enter new password">
+    <button type="submit">Update</button>
+</form>
+{% endblock content %}

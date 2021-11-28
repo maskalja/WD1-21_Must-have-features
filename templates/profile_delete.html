@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Profile delete</h2>
+<form method="post">
+    <p>{{ user.name }} do you really want to delete your profile?</p>
+    <input type="submit" name="yes_delete" value="Yes"> | <input type="submit" name="no_delete" value="No">
+</form>
+{% endblock content%}

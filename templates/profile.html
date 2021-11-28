@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Profile {{ user.name }}</h2>
+
+
+<ul>
+    <li><strong>NAME:</strong> {{ user.name }}</li>
+    <li><strong>E-MAIL:</strong> {{ user.email }}</li>
+</ul>
+<a href="/profile/edit">Edit profile</a>
+<a href="/profile/delete">Delete profile</a>
+{% endblock content %}
